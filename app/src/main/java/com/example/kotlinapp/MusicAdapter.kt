@@ -1,7 +1,6 @@
 package com.example.kotlinapp
 
 import android.graphics.Color
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 var selectedMusicPos : Int? = null
 class MusicAdapter(private val dataSet: List<Music>) : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
+
 
     /**
      * Provide a reference to the type of views that you are using
