@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 var selectedMusicPos : Int? = null
 class MusicAdapter(private val dataSet: List<Music>) : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
@@ -38,7 +39,7 @@ class MusicAdapter(private val dataSet: List<Music>) : RecyclerView.Adapter<Musi
 
             fun changeColor(pos: Int) {
                 if (selectedMusicPos == pos) {
-                    itemView.setBackgroundColor(Color.MAGENTA)
+                    itemView.setBackgroundColor(Color.RED)
                 }
                 else {
                     itemView.setBackgroundColor(Color.WHITE)
@@ -67,11 +68,18 @@ class MusicAdapter(private val dataSet: List<Music>) : RecyclerView.Adapter<Musi
 
         viewHolder.itemView.setOnClickListener {
 
+
+            val root = it.rootView
+            val player : CardView = root.findViewById(R.id.player)
+            val description : TextView = player.findViewById(R.id.Description)
+            description.text = music.name
+
             val pos = selectedMusicPos
             if(position == selectedMusicPos) {
                 selectedMusicPos = null
             }
             else {
+                Player.music = music
                 selectedMusicPos = position
                 if (pos != null) {
                     notifyItemChanged(pos)

@@ -22,6 +22,7 @@
    </androidx.recyclerview.widget.RecyclerView>
 
 
+
    <com.google.android.material.floatingactionbutton.FloatingActionButton
        android:id="@+id/playFAB"
        android:layout_width="wrap_content"
@@ -31,6 +32,17 @@
        android:contentDescription="Play">
 
    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+   <include
+       android:id="@+id/player"
+       app:layout_constraintBottom_toTopOf="@id/nav"
+       layout="@layout/layout_player"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       />
 
    <com.google.android.material.bottomnavigation.BottomNavigationView
        android:id="@+id/nav"

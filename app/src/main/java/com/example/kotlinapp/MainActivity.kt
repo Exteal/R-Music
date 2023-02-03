@@ -20,9 +20,11 @@ class MainActivity : AppCompatActivity() {
         val musicAdapter = MusicAdapter(musics)
         recycler.adapter = musicAdapter
 
+        val player = Player(applicationContext)
+
         val fab : FloatingActionButton = findViewById(R.id.playFAB)
         fab.setImageDrawable(AppCompatResources.getDrawable(applicationContext, R.drawable.play))
-
+        fab.setOnClickListener { if(selectedMusicPos != null) player.playMusic() }
     }
 
 }
