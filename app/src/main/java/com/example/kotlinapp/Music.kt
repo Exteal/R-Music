@@ -7,9 +7,9 @@ data class Music(val artist : String,
 
 fun Music.getImage () : Int =
     when(this.ref) {
-               1 -> R.drawable.moeshop
-               2-> R.drawable.psyqui
-               3-> R.drawable.rushgarcia
+               1 -> R.mipmap.moeshop
+               2-> R.mipmap.psyqui
+               3-> R.mipmap.rushgarcia
         else -> {throw java.lang.IllegalArgumentException()}
     }
 

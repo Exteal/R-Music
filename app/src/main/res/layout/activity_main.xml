@@ -23,20 +23,20 @@
 
 
 
-   <com.google.android.material.floatingactionbutton.FloatingActionButton
-       android:id="@+id/playFAB"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintBottom_toTopOf="@+id/nav"
-       android:contentDescription="Play">
-
-   </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
 
    <include
-       android:id="@+id/player"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       layout="@layout/play_fab"
+       android:id="@id/playFAB"
        app:layout_constraintBottom_toTopOf="@id/nav"
+       app:layout_constraintRight_toRightOf="parent">
+   </include>
+
+   <include
+       android:id="@+id/playerCard"
+       app:layout_constraintBottom_toTopOf="@id/nav"
+       android:visibility="invisible"
        layout="@layout/layout_player"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
