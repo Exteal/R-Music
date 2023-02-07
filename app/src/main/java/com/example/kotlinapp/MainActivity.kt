@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlin.reflect.KClass
 
 class MainActivity : AppCompatActivity() {
+    private val player = Player
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +23,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val playerView : CardView = findViewById(R.id.playerCard)
+
+        player.activity = this
+        player.handleComponents()
+
         val recycler : RecyclerView = findViewById(R.id.recyclerview)
         val musicAdapter = MusicAdapter(musics)
         recycler.adapter = musicAdapter
@@ -35,15 +40,15 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val playerView : CardView = findViewById(R.id.playerCard)
-        val player = Player(this)
 
-        player.handleComponents()
+
+
 
         val fab : FloatingActionButton = findViewById(R.id.playFAB)
         fab.setImageDrawable(AppCompatResources.getDrawable(applicationContext, R.mipmap.play))
+
         fab.setOnClickListener {
-            when(selectedMusicPos ) {
+            when(player.storedMusicPos) {
                 -1 -> {
                     player.stop()
                     playerView.visibility = View.INVISIBLE
@@ -51,7 +56,6 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     player.playMusic()
                     playerView.visibility = View.VISIBLE
-
                 }
             }
         }
@@ -60,16 +64,14 @@ class MainActivity : AppCompatActivity() {
 
         nav.setOnItemSelectedListener {
             when(it.itemId) {
-                R.id.page1 -> false
+                R.id.page1 -> true
                 R.id.page2 -> {
                     val intent = Intent(this, PlaylistActivity::class.java)
                     startActivity(intent)
-
                     true
                 }
-                R.id.page3 -> false
-                else -> false
-
+                R.id.page3 -> true
+                else -> true
             }
         }
     }

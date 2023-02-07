@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 class PlayListAdapter(private val playlists: List<PlayList>) :
     RecyclerView.Adapter<PlayListAdapter.ViewHolder>() {
 
+    private val recyclers = ArrayList<RecyclerView>()
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val playlistName : TextView
@@ -21,9 +23,20 @@ class PlayListAdapter(private val playlists: List<PlayList>) :
             musicsList = view.findViewById(R.id.playlistMusicsList)
         }
 
-        fun bind(playlist : PlayList) {
+        fun bind(playlist : PlayList, recyclers : ArrayList<RecyclerView>) {
             playlistName.text = playlist.name
-            musicsList.adapter = MusicAdapter(playlist.musicList)
+
+            val adapter = MusicPlaylistAdapter(playlist.musicList)
+            adapter.addToOtherLists(musicsList)
+            recyclers.forEach { val v = it.adapter as MusicPlaylistAdapter
+                v.addToOtherLists(musicsList)
+            }
+            recyclers.forEach { adapter.addToOtherLists(it) }
+
+            recyclers.add(musicsList)
+            musicsList.adapter = adapter
+
+
 
             val musicSeparator = DividerItemDecoration(musicsList.context, DividerItemDecoration.VERTICAL)
             val drawable = ContextCompat.getDrawable(musicsList.context, R.drawable.divider)
@@ -44,9 +57,10 @@ class PlayListAdapter(private val playlists: List<PlayList>) :
     override fun onBindViewHolder(viewholder: ViewHolder, position: Int) {
         val playlist = playlists[position]
 
-        viewholder.bind(playlist)
+        viewholder.bind(playlist, recyclers)
 
         viewholder.itemView.setOnClickListener {
+
             val mu : RecyclerView = it.findViewById(R.id.playlistMusicsList)
             when(mu.visibility) {
                 View.INVISIBLE -> {}
@@ -55,6 +69,7 @@ class PlayListAdapter(private val playlists: List<PlayList>) :
             }
         }
     }
+
 
     override fun getItemCount(): Int = playlists.size
 }

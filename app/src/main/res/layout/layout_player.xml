@@ -48,43 +48,30 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.Material3.Button.IconButton"
                     android:id="@+id/stop"
+                    style="@style/PlayerButton"
+                    app:icon="@mipmap/stop"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:icon="@mipmap/stop"
-                    app:iconSize="12dp"
-                    android:backgroundTint="@color/playerCard"
-                    android:layout_gravity="center"
-                    app:iconPadding="0dp"
-                    android:insetLeft="8dp"
+
                 />
+
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/pause"
-                    style="@style/Widget.Material3.Button.IconButton"
+                    style="@style/PlayerButton"
+                    app:icon="@mipmap/pause"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:backgroundTint="@color/playerCard"
-                    app:icon="@mipmap/pause"
-                    app:iconSize="12dp"
-                    android:layout_gravity="center"
-                    app:iconPadding="0dp"
-                    android:insetLeft="8dp"
                 />
 
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/skip"
                     style="@style/Widget.Material3.Button.IconButton"
+                    app:icon="@mipmap/skip"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:icon="@mipmap/skip"
-                    app:iconSize="12dp"
-                    android:backgroundTint="@color/playerCard"
-                    android:layout_gravity="center"
-                    app:iconPadding="0dp"
-                    android:insetLeft="8dp"
                 />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>

@@ -3,7 +3,7 @@ package com.example.kotlinapp
 data class Music(val artist : String,
                  val name : String,
                  val ref : Int,
-                 val tags: List<Tag>)
+                 val tags: List<Tag>) : java.io.Serializable
 
 fun Music.getImage () : Int =
     when(this.ref) {

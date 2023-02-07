@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <Button
+        android:id="@+id/musicActivityBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <ImageView
+        android:id="@+id/activityMusicImage"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Image"
+        android:src="@mipmap/rushgarcia"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="200dp">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/activityMusicArtistText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/activityMusicImage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Artist"
+        />
+
+    <TextView
+        android:id="@+id/activityMusicSongText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activityMusicArtistText"
+        android:text="Song - Song"
+        />
+
+    <Button
+        android:id="@+id/activityMusicPreviousSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/activityMusicSongText"
+        app:layout_constraintRight_toLeftOf="@id/activityMusicPauseSong" />
+
+    <Button
+        android:id="@+id/activityMusicPauseSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/activityMusicSongText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+    <Button
+        android:id="@+id/activityMusicNextSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/activityMusicSongText"
+        app:layout_constraintLeft_toRightOf="@id/activityMusicPauseSong" />
+
+
+    <TextView
+        android:id="@+id/activityMusicSongNum"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activityMusicPauseSong"
+        android:text="Num - Song"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

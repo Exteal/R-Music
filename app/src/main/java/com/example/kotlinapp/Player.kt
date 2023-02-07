@@ -5,9 +5,6 @@ import android.media.MediaPlayer
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.core.view.size
-import androidx.recyclerview.widget.RecyclerView
 
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -18,18 +15,66 @@ import java.text.DecimalFormat
 import java.util.Timer
 import kotlin.concurrent.fixedRateTimer
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
-class Player(private val activity: AppCompatActivity) {
+object  Player {
+
+    lateinit var activity: AppCompatActivity //update every activity change
     private var sliderThread : Timer? = null
+    var playingMusicPos by Delegates.notNull<Int>()
+    var storedMusicPos  = -1
+    var playlist : ArrayList<Music> = ArrayList()
+    private var player = MediaPlayer()
 
-    companion object {
-        var player = MediaPlayer()
-        lateinit var music : Music
-    }
-
+    //to be used every activity change
     fun handleComponents() {
         handleButtons()
         handleSlider()
+    }
+
+    fun stop() {
+        player.release()
+        val card: MaterialCardView = activity.findViewById(R.id.playerCard)
+        card.visibility = View.INVISIBLE
+    }
+    fun pause() {
+        if(player.isPlaying) player.pause()
+        else player.start()
+    }
+    fun playMusic() {
+
+        playingMusicPos = storedMusicPos
+
+        val description : TextView = activity.findViewById(R.id.playerDescription)
+        val slider : Slider = activity.findViewById(R.id.playerSlider)
+        val music = playlist[storedMusicPos]
+
+        description.text = music.name
+        player.release()  //TODO -> player.reset()
+        player = MediaPlayer.create(activity, music.getSound())
+
+        player.setOnCompletionListener {
+            sliderThread?.cancel()
+            sliderThread = null
+        }
+
+        // val uir = "/storage/emulated/0/Android/media/Burn My Dread.mp3"
+        // val ff = File(uir)
+        // Log.d("UIR", ff.canRead().toString())
+        // player = MediaPlayer.create(activity, ff.toUri())
+
+        player.setOnPreparedListener {
+            slider.valueTo = player.duration.toFloat()
+            sliderThread?.cancel()
+            slider.value = 0f
+
+            player.start()
+
+            sliderThread = fixedRateTimer(initialDelay = 1000, period = 1000) {
+                if(slider.value+1000 < slider.valueTo) slider.value+=1000.toFloat()
+                else this.cancel()
+            }
+        }
     }
 
     private fun handleButtons() {
@@ -37,15 +82,14 @@ class Player(private val activity: AppCompatActivity) {
         val pause : MaterialButton = activity.findViewById(R.id.pause)
         val skip : MaterialButton = activity.findViewById(R.id.skip)
         val stop : MaterialButton = activity.findViewById(R.id.stop)
+        val play : FloatingActionButton = activity.findViewById(R.id.playFAB)
 
         skip.setOnClickListener {
-            val recycler : RecyclerView = activity.findViewById(R.id.recyclerview)
 
-            if(selectedMusicPos < recycler.size-1) {
-                val play : FloatingActionButton = activity.findViewById(R.id.playFAB)
-                recycler[selectedMusicPos+1].performClick()
-
-                play.performClick()
+            if(playingMusicPos+1 in playlist.indices) {
+                playingMusicPos++
+                storedMusicPos =  playingMusicPos
+                playMusic()
             }
             else {
                 stop.performClick()
@@ -53,14 +97,11 @@ class Player(private val activity: AppCompatActivity) {
         }
 
         pause.setOnClickListener {
-            if(player.isPlaying) player.pause()
-            else player.start()
+            pause()
         }
 
         stop.setOnClickListener {
-            player.release()
-            val card : MaterialCardView = activity.findViewById(R.id.playerCard)
-            card.visibility = View.INVISIBLE
+            stop()
         }
     }
 
@@ -85,58 +126,7 @@ class Player(private val activity: AppCompatActivity) {
             }
         })
     }
-    fun stop() {
-        player.release()
-    }
-    fun playMusic() {
-        val description : TextView = activity.findViewById(R.id.playerDescription)
-        val slider : Slider = activity.findViewById(R.id.playerSlider)
 
-        description.text = music.name
-        player.release()  //TODO -> player.reset()
-        player = MediaPlayer.create(activity, music.getSound())
-
-        player.setOnCompletionListener {
-            sliderThread?.cancel()
-            sliderThread = null
-        }
-
-       // val uir = "/storage/emulated/0/Android/media/Burn My Dread.mp3"
-        // val ff = File(uir)
-       // Log.d("UIR", ff.canRead().toString())
-       // player = MediaPlayer.create(activity, ff.toUri())
-
-        player.setOnPreparedListener {
-            slider.valueTo = player.duration.toFloat()
-            sliderThread?.cancel()
-            slider.value = 0f
-
-            player.start()
-
-            sliderThread = fixedRateTimer(initialDelay = 1000, period = 1000) {
-                if(slider.value+1000 < slider.valueTo) slider.value+=1000.toFloat()
-                else this.cancel()
-            }
-        }
-    }
-
+    fun isPlaying() = player.isPlaying
 
 }
-
-/*
-      player.setAudioAttributes(AudioAttributes.Builder()
-          .setUsage(AudioAttributes.USAGE_MEDIA)
-          .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-          .setLegacyStreamType(AudioManager.STREAM_MUSIC)
-          .build())
-
-      val res = resources.openRawResourceFd(music.getSound())
-      if (res == null) {
-        Log.d("TAG", "FD NULL")
-      }
-      else {
-          player.setDataSource(res.fileDescriptor)
-          player.prepare()
-          player.start()
-          //
-      }*/

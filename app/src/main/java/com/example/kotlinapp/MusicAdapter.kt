@@ -1,5 +1,6 @@
 package com.example.kotlinapp
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -8,20 +9,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-var selectedMusicPos : Int = -1
-class MusicAdapter(private val dataSet: List<Music>) :
-    RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
 
-
+open class MusicAdapter(private val dataSet: List<Music>) :
+                RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
+    private val player = Player
+    val views = ArrayList<View>()
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder)
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val musicImage: ImageView
         private val musicName: TextView
         private val musicArtist: TextView
+
 
         init {
             // Define click listener for the ViewHolder's View
@@ -37,15 +39,6 @@ class MusicAdapter(private val dataSet: List<Music>) :
             musicArtist.text = music.artist
         }
 
-        fun changeColor(pos: Int) {
-            if (selectedMusicPos == pos) {
-                itemView.setBackgroundColor(Color.RED)
-            }
-            else {
-                itemView.setBackgroundColor(Color.WHITE)
-            }
-        }
-
     }
 
     // Create new views (invoked by the layout manager)
@@ -58,34 +51,67 @@ class MusicAdapter(private val dataSet: List<Music>) :
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+
+
+
+    fun toDefaultColor() {
+        views.forEach { v -> v.setBackgroundColor(Color.WHITE) }
+    }
+    open fun onMusicClick(it : View, position: Int) {
+        if(player.playlist == dataSet && player.storedMusicPos == position) {
+            player.storedMusicPos =-1
+            it.setBackgroundColor(Color.WHITE)
+        }
+
+        else {
+            when(val oldSelected = player.storedMusicPos) {
+                -1 -> {}
+                else -> toDefaultColor()
+            }
+
+            it.setBackgroundColor(Color.RED)
+            player.playlist = ArrayList(dataSet)
+            player.storedMusicPos = position
+        }
+
+
+    }
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
         val music = dataSet[position]
         viewHolder.bind(music)
-        viewHolder.changeColor(position)
+
+        views.add(viewHolder.itemView)
 
         viewHolder.itemView.setOnClickListener {
+                onMusicClick(it, position)
 
+            /*
             val pos = selectedMusicPos
             if(position == selectedMusicPos) {
                 selectedMusicPos = -1
             }
             else {
-                Player.music = music
                 selectedMusicPos = position
                 if (pos != -1) {
                     notifyItemChanged(pos)
                 }
             }
             notifyItemChanged(position)
+            */
+
+        }
+
+        viewHolder.itemView.setOnLongClickListener {
+            val intent = Intent(it.context, MusicActivity::class.java)
+            intent.putExtra("playlist", arrayListOf(dataSet))
+            intent.putExtra("music", music)
+            it.context.startActivity(intent)
+            true
         }
     }
-
-    /*unhilight() {
-
-    }*/
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
