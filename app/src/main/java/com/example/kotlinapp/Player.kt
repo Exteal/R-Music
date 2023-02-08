@@ -21,7 +21,7 @@ import kotlin.properties.Delegates
 
 object Player {
 
-    var playingMusicPos by Delegates.notNull<Int>()
+    private var playingMusicPos by Delegates.notNull<Int>()
     var storedMusicPos  = -1
     var playlist : ArrayList<Music> = ArrayList()
     lateinit var activity: AppCompatActivity //update with every activity change

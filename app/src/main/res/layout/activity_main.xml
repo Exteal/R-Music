@@ -29,13 +29,23 @@
        android:layout_height="wrap_content"
        layout="@layout/play_fab"
        android:id="@id/playFAB"
-       app:layout_constraintBottom_toTopOf="@id/nav"
+       app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintRight_toRightOf="parent">
    </include>
 
+
+   <androidx.appcompat.widget.SearchView
+       android:id="@+id/Search"
+       android:layout_height="wrap_content"
+       android:layout_width="match_parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintLeft_toLeftOf="parent">
+   </androidx.appcompat.widget.SearchView>
+
+
    <include
        android:id="@+id/playerCard"
-       app:layout_constraintBottom_toTopOf="@id/nav"
+       app:layout_constraintBottom_toTopOf="parent"
        android:visibility="invisible"
        layout="@layout/layout_player"
        android:layout_width="wrap_content"
@@ -43,7 +53,7 @@
        app:layout_constraintLeft_toLeftOf="parent"
        app:layout_constraintRight_toRightOf="parent"
        />
-
+   <!--
    <com.google.android.material.bottomnavigation.BottomNavigationView
        android:id="@+id/nav"
        android:layout_width="match_parent"
@@ -53,5 +63,5 @@
 
    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-
+   -->
 </androidx.constraintlayout.widget.ConstraintLayout>

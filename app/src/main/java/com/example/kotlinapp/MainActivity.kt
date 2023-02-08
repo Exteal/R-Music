@@ -4,14 +4,11 @@ package com.example.kotlinapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.cardview.widget.CardView
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val playerView : CardView = findViewById(R.id.playerCard)
 
         Player.activity = this
         Player.handleComponents()
@@ -61,6 +57,17 @@ class MainActivity : AppCompatActivity() {
         }
         */
 
+        val search : SearchView = findViewById(R.id.Search)
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+
+            }
+        })
 
         val nav : BottomNavigationView = findViewById(R.id.nav)
 

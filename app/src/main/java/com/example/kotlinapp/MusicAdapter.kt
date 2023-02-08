@@ -5,15 +5,18 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
 open class MusicAdapter(private val dataSet: List<Music>) :
-                RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
+                RecyclerView.Adapter<MusicAdapter.ViewHolder>(), Filterable {
 
     val views = ArrayList<View>()
+    var filterResults = ArrayList<Music>()
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder)
@@ -54,7 +57,7 @@ open class MusicAdapter(private val dataSet: List<Music>) :
 
 
 
-    fun toDefaultColor() {
+    private fun toDefaultColor() {
         views.forEach { v -> v.setBackgroundColor(Color.WHITE) }
     }
     open fun onMusicClick(it : View, position: Int) {
@@ -64,7 +67,7 @@ open class MusicAdapter(private val dataSet: List<Music>) :
         }
 
         else {
-            when(val oldSelected = Player.storedMusicPos) {
+            when(Player.storedMusicPos) {
                 -1 -> {}
                 else -> toDefaultColor()
             }
@@ -115,5 +118,30 @@ open class MusicAdapter(private val dataSet: List<Music>) :
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(condition: CharSequence?): FilterResults {
+                filterResults = if(condition.isNullOrBlank()) {
+                    dataSet as ArrayList<Music>
+                } else {
+                    val res = ArrayList<Music>()
+                        for(music in dataSet) {
+                            if(music.name.contains(condition)) res.add(music)
+                        }
+                    res
+                }
+
+                val results = FilterResults()
+                results.values = filterResults
+                return results
+            }
+
+            override fun publishResults(p0: CharSequence?, results: FilterResults?) {
+                filterResults = results?.values as ArrayList<Music>
+                notifyDataSetChanged()
+            }
+
+        }
+    }
 
 }
