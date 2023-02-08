@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 open class MusicAdapter(private val dataSet: List<Music>) :
                 RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
-    private val player = Player
+
     val views = ArrayList<View>()
     /**
      * Provide a reference to the type of views that you are using
@@ -58,20 +58,20 @@ open class MusicAdapter(private val dataSet: List<Music>) :
         views.forEach { v -> v.setBackgroundColor(Color.WHITE) }
     }
     open fun onMusicClick(it : View, position: Int) {
-        if(player.playlist == dataSet && player.storedMusicPos == position) {
-            player.storedMusicPos =-1
+        if(Player.playlist == dataSet && Player.storedMusicPos == position) {
+            Player.storedMusicPos =-1
             it.setBackgroundColor(Color.WHITE)
         }
 
         else {
-            when(val oldSelected = player.storedMusicPos) {
+            when(val oldSelected = Player.storedMusicPos) {
                 -1 -> {}
                 else -> toDefaultColor()
             }
 
             it.setBackgroundColor(Color.RED)
-            player.playlist = ArrayList(dataSet)
-            player.storedMusicPos = position
+            Player.playlist = ArrayList(dataSet)
+            Player.storedMusicPos = position
         }
 
 

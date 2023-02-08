@@ -14,7 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
-    private val player = Player
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         val playerView : CardView = findViewById(R.id.playerCard)
 
-        player.activity = this
-        player.handleComponents()
+        Player.activity = this
+        Player.handleComponents()
 
         val recycler : RecyclerView = findViewById(R.id.recyclerview)
         val musicAdapter = MusicAdapter(musics)
@@ -44,21 +44,23 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val fab : FloatingActionButton = findViewById(R.id.playFAB)
+        /*val fab : FloatingActionButton = findViewById(R.id.playFAB)
         fab.setImageDrawable(AppCompatResources.getDrawable(applicationContext, R.mipmap.play))
 
         fab.setOnClickListener {
-            when(player.storedMusicPos) {
+            when(Player.storedMusicPos) {
                 -1 -> {
-                    player.stop()
+                    Player.stop()
                     playerView.visibility = View.INVISIBLE
                 }
                 else -> {
-                    player.playMusic()
+                    Player.playMusic()
                     playerView.visibility = View.VISIBLE
                 }
             }
         }
+        */
+
 
         val nav : BottomNavigationView = findViewById(R.id.nav)
 

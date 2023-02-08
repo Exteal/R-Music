@@ -5,6 +5,8 @@ import android.media.MediaPlayer
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.cardview.widget.CardView
 
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -17,39 +19,43 @@ import kotlin.concurrent.fixedRateTimer
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
-object  Player {
+object Player {
 
-    lateinit var activity: AppCompatActivity //update every activity change
-    private var sliderThread : Timer? = null
     var playingMusicPos by Delegates.notNull<Int>()
     var storedMusicPos  = -1
     var playlist : ArrayList<Music> = ArrayList()
+    lateinit var activity: AppCompatActivity //update with every activity change
+
+    private var sliderThread : Timer? = null
     private var player = MediaPlayer()
 
-    //to be used every activity change
+    //use every activity change
     fun handleComponents() {
         handleButtons()
         handleSlider()
+
+        TODO("set FAB onClick in player, not in activities -> stop/play/pause to private")
     }
 
-    fun stop() {
+    private fun stop() {
         player.release()
         val card: MaterialCardView = activity.findViewById(R.id.playerCard)
         card.visibility = View.INVISIBLE
     }
-    fun pause() {
+    private fun pause() {
         if(player.isPlaying) player.pause()
         else player.start()
     }
-    fun playMusic() {
+
+    private fun playMusic() {
 
         playingMusicPos = storedMusicPos
 
-        val description : TextView = activity.findViewById(R.id.playerDescription)
         val slider : Slider = activity.findViewById(R.id.playerSlider)
         val music = playlist[storedMusicPos]
 
-        description.text = music.name
+        updatePlayerLayout(music)
+
         player.release()  //TODO -> player.reset()
         player = MediaPlayer.create(activity, music.getSound())
 
@@ -77,12 +83,20 @@ object  Player {
         }
     }
 
+    private fun updatePlayerLayout(music : Music) {
+        val description : TextView = activity.findViewById(R.id.playerDescription)
+        description.text = music.name
+    }
     private fun handleButtons() {
 
         val pause : MaterialButton = activity.findViewById(R.id.pause)
         val skip : MaterialButton = activity.findViewById(R.id.skip)
         val stop : MaterialButton = activity.findViewById(R.id.stop)
-        val play : FloatingActionButton = activity.findViewById(R.id.playFAB)
+
+        val fab : FloatingActionButton = activity.findViewById(R.id.playFAB)
+        fab.setImageDrawable(AppCompatResources.getDrawable(activity.applicationContext, R.mipmap.play))
+        val playerView : CardView = activity.findViewById(R.id.playerCard)
+
 
         skip.setOnClickListener {
 
@@ -103,6 +117,20 @@ object  Player {
         stop.setOnClickListener {
             stop()
         }
+
+        fab.setOnClickListener {
+            when(storedMusicPos) {
+                -1 -> {
+                    stop()
+                    playerView.visibility = View.INVISIBLE
+                }
+                else -> {
+                    playMusic()
+                    playerView.visibility = View.VISIBLE
+                }
+            }
+        }
+
     }
 
     private fun handleSlider() {
