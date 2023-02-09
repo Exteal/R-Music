@@ -21,8 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        Player.activity = this
-        Player.handleComponents()
+        Player.handleComponents(activity = this, usesCardLayout = true)
 
         val recycler : RecyclerView = findViewById(R.id.recyclerview)
         val musicAdapter = MusicAdapter(musics)
@@ -36,36 +35,15 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
-        /*val fab : FloatingActionButton = findViewById(R.id.playFAB)
-        fab.setImageDrawable(AppCompatResources.getDrawable(applicationContext, R.mipmap.play))
-
-        fab.setOnClickListener {
-            when(Player.storedMusicPos) {
-                -1 -> {
-                    Player.stop()
-                    playerView.visibility = View.INVISIBLE
-                }
-                else -> {
-                    Player.playMusic()
-                    playerView.visibility = View.VISIBLE
-                }
-            }
-        }
-        */
-
         val search : SearchView = findViewById(R.id.Search)
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String?): Boolean {
-                TODO("Not yet implemented")
+            override fun onQueryTextChange(query: String?): Boolean {
+                musicAdapter.filter.filter(query)
+                return true
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
-
+                return false
             }
         })
 

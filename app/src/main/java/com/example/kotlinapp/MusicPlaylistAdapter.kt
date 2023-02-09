@@ -20,6 +20,6 @@ class MusicPlaylistAdapter(musicList: ArrayList<Music>) : MusicAdapter(musicList
     override fun onMusicClick(it : View, position: Int) {
         othersRecyclers.forEach { re -> re.children.forEach { ch -> ch.setBackgroundColor(Color.WHITE) } }
         super.onMusicClick(it, position)
-        TODO("color change -> define default color")
+        //TODO color change -> define default color
     }
 }

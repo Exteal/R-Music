@@ -51,6 +51,7 @@
                     android:id="@+id/stop"
                     style="@style/PlayerButton"
                     app:icon="@mipmap/stop"
+                    app:toggleCheckedStateOnClick="false"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
 
@@ -61,6 +62,7 @@
                     android:id="@+id/pause"
                     style="@style/PlayerButton"
                     app:icon="@mipmap/pause"
+                    app:toggleCheckedStateOnClick="false"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                 />
@@ -68,6 +70,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/skip"
+                    app:toggleCheckedStateOnClick="false"
                     style="@style/Widget.Material3.Button.IconButton"
                     app:icon="@mipmap/skip"
                     android:layout_width="48dp"

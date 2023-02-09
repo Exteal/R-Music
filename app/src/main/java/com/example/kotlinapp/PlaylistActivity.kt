@@ -18,36 +18,12 @@ class PlaylistActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        Player.activity = this
-
+        Player.handleComponents(activity = this,  usesCardLayout = true)
 
         val playlistRecycler : RecyclerView = findViewById(R.id.recyclerviewPlayList)
         val adapter = PlayListAdapter(playlists)
 
         playlistRecycler.adapter = adapter
-
-        /*
-        val fab : FloatingActionButton = findViewById(R.id.playFAB)
-
-
-
-
-
-        fab.setImageDrawable(AppCompatResources.getDrawable(applicationContext, R.mipmap.play))
-
-
-            when(val clickedPos = Player.storedMusicPos) {
-                -1 -> {
-                    Player.stop()
-                    playerView.visibility = View.INVISIBLE
-                }
-                else -> {
-                    Player.playMusic()
-                    playerView.visibility = View.VISIBLE
-                }
-            }
-        */
-
 
 
 

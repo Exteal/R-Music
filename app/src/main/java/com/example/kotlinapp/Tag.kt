@@ -3,7 +3,8 @@ package com.example.kotlinapp
 enum class Tag {
     HOUSE,
     FUNK,
-    ELECTRO,
+    ROCK,
     JAZZ,
-    POP
+    POP,
+    WEEB
 }

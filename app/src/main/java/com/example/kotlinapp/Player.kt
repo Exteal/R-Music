@@ -2,14 +2,9 @@ package com.example.kotlinapp
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
-import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.cardview.widget.CardView
 
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
 import java.math.RoundingMode
@@ -24,37 +19,99 @@ object Player {
     private var playingMusicPos by Delegates.notNull<Int>()
     var storedMusicPos  = -1
     var playlist : ArrayList<Music> = ArrayList()
-    lateinit var activity: AppCompatActivity //update with every activity change
 
     private var sliderThread : Timer? = null
     private var player = MediaPlayer()
 
     //use every activity change
-    fun handleComponents() {
-        handleButtons()
-        handleSlider()
+    fun handleComponents(activity: AppCompatActivity, usesCardLayout : Boolean) {
+            handleButtons(activity, usesCardLayout)
+            handleSlider(activity, usesCardLayout)
+    }
 
-        TODO("set FAB onClick in player, not in activities -> stop/play/pause to private")
+    private fun handleButtons(activity: AppCompatActivity, usesCardLayout: Boolean) {
+
+        val pause : MaterialButton = activity.findViewById(R.id.pause)
+        val skip : MaterialButton = activity.findViewById(R.id.skip)
+        val stop : MaterialButton = activity.findViewById(R.id.stop)
+        val fab : FloatingActionButton = activity.findViewById(R.id.playFAB)
+
+        if(usesCardLayout) PlayerLayout.updateFabLayout(activity)
+
+        skip.setOnClickListener {
+            if(playingMusicPos+1 in playlist.indices) {
+                playingMusicPos++
+                storedMusicPos =  playingMusicPos
+                fab.performClick()
+            }
+            else {
+                stop.performClick()
+            }
+        }
+
+        pause.setOnClickListener {
+            pause()
+        }
+
+        stop.setOnClickListener {
+            stop()
+            if(usesCardLayout) PlayerLayout.onStopLayout(activity)
+        }
+
+        fab.setOnClickListener {
+            when(storedMusicPos) {
+                -1 -> {
+                    stop()
+                    if(usesCardLayout) PlayerLayout.onStopLayout(activity)
+                }
+                else -> {
+                    playMusic(activity)
+                    if(usesCardLayout) PlayerLayout.onPlayLayout(activity)
+                }
+            }
+        }
+
+    }
+
+    private fun handleSlider(activity: AppCompatActivity, cardPlayerLayout: Boolean) {
+        val slider : Slider = activity.findViewById(R.id.playerSlider)
+        slider.setLabelFormatter { value ->
+            val minFormat  = DecimalFormat("#")
+            minFormat.roundingMode = RoundingMode.DOWN
+
+            "${minFormat.format(value/(1000*60))} : ${String.format("%02d",((value/1000)%60).roundToInt())}"
+        }
+
+        slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            @SuppressLint("RestrictedApi")
+            override fun onStartTrackingTouch(slider: Slider) {
+
+            }
+
+            @SuppressLint("RestrictedApi")
+            override fun onStopTrackingTouch(slider: Slider) {
+                player.seekTo(slider.value.toInt())
+            }
+        })
     }
 
     private fun stop() {
         player.release()
-        val card: MaterialCardView = activity.findViewById(R.id.playerCard)
-        card.visibility = View.INVISIBLE
     }
+
     private fun pause() {
         if(player.isPlaying) player.pause()
         else player.start()
     }
 
-    private fun playMusic() {
+    private fun playMusic(activity: AppCompatActivity) {
 
         playingMusicPos = storedMusicPos
 
         val slider : Slider = activity.findViewById(R.id.playerSlider)
         val music = playlist[storedMusicPos]
 
-        updatePlayerLayout(music)
+
 
         player.release()  //TODO -> player.reset()
         player = MediaPlayer.create(activity, music.getSound())
@@ -83,78 +140,7 @@ object Player {
         }
     }
 
-    private fun updatePlayerLayout(music : Music) {
-        val description : TextView = activity.findViewById(R.id.playerDescription)
-        description.text = music.name
-    }
-    private fun handleButtons() {
+    //card layout management
 
-        val pause : MaterialButton = activity.findViewById(R.id.pause)
-        val skip : MaterialButton = activity.findViewById(R.id.skip)
-        val stop : MaterialButton = activity.findViewById(R.id.stop)
-
-        val fab : FloatingActionButton = activity.findViewById(R.id.playFAB)
-        fab.setImageDrawable(AppCompatResources.getDrawable(activity.applicationContext, R.mipmap.play))
-        val playerView : CardView = activity.findViewById(R.id.playerCard)
-
-
-        skip.setOnClickListener {
-
-            if(playingMusicPos+1 in playlist.indices) {
-                playingMusicPos++
-                storedMusicPos =  playingMusicPos
-                playMusic()
-            }
-            else {
-                stop.performClick()
-            }
-        }
-
-        pause.setOnClickListener {
-            pause()
-        }
-
-        stop.setOnClickListener {
-            stop()
-        }
-
-        fab.setOnClickListener {
-            when(storedMusicPos) {
-                -1 -> {
-                    stop()
-                    playerView.visibility = View.INVISIBLE
-                }
-                else -> {
-                    playMusic()
-                    playerView.visibility = View.VISIBLE
-                }
-            }
-        }
-
-    }
-
-    private fun handleSlider() {
-        val slider : Slider = activity.findViewById(R.id.playerSlider)
-        slider.setLabelFormatter { value ->
-            val minFormat  = DecimalFormat("#")
-            minFormat.roundingMode = RoundingMode.DOWN
-
-            "${minFormat.format(value/(1000*60))} : ${String.format("%02d",((value/1000)%60).roundToInt())}"
-        }
-
-        slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-            @SuppressLint("RestrictedApi")
-            override fun onStartTrackingTouch(slider: Slider) {
-
-            }
-
-            @SuppressLint("RestrictedApi")
-            override fun onStopTrackingTouch(slider: Slider) {
-                player.seekTo(slider.value.toInt())
-            }
-        })
-    }
-
-    fun isPlaying() = player.isPlaying
 
 }

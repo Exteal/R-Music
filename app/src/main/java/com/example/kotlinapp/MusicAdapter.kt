@@ -15,8 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 open class MusicAdapter(private val dataSet: List<Music>) :
                 RecyclerView.Adapter<MusicAdapter.ViewHolder>(), Filterable {
 
-    val views = ArrayList<View>()
-    var filterResults = ArrayList<Music>()
+    private val views = ArrayList<View>()
+    var filterResults : ArrayList<Music>
+
+    init  {
+        filterResults = ArrayList(dataSet)
+    }
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder)
@@ -30,6 +34,7 @@ open class MusicAdapter(private val dataSet: List<Music>) :
 
         init {
             // Define click listener for the ViewHolder's View
+
             musicName = view.findViewById(R.id.musicName)
             musicArtist = view.findViewById(R.id.musicArtist)
             musicImage= view.findViewById(R.id.musicImage)
@@ -83,50 +88,38 @@ open class MusicAdapter(private val dataSet: List<Music>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
 
-        val music = dataSet[position]
+        val music = filterResults[position]
         viewHolder.bind(music)
-
         views.add(viewHolder.itemView)
 
         viewHolder.itemView.setOnClickListener {
-                onMusicClick(it, position)
-
-            /*
-            val pos = selectedMusicPos
-            if(position == selectedMusicPos) {
-                selectedMusicPos = -1
-            }
-            else {
-                selectedMusicPos = position
-                if (pos != -1) {
-                    notifyItemChanged(pos)
-                }
-            }
-            notifyItemChanged(position)
-            */
-
+            onMusicClick(it, position)
         }
 
-        viewHolder.itemView.setOnLongClickListener {
+       viewHolder.itemView.setOnLongClickListener {
             val intent = Intent(it.context, MusicActivity::class.java)
             intent.putExtra("playlist", arrayListOf(dataSet))
             intent.putExtra("music", music)
             it.context.startActivity(intent)
             true
-        }
+
+       }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    override fun getItemCount() = filterResults.size
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(condition: CharSequence?): FilterResults {
-                filterResults = if(condition.isNullOrBlank()) {
-                    dataSet as ArrayList<Music>
+                filterResults = if(condition.isNullOrEmpty()) {
+                    ArrayList(dataSet)
                 } else {
                     val res = ArrayList<Music>()
                         for(music in dataSet) {
-                            if(music.name.contains(condition)) res.add(music)
+                            if(music.name.contains(condition, ignoreCase = true)
+                                || music.artist.contains(condition,ignoreCase = true)
+                                || music.tags.any { it.name.contains(condition, ignoreCase = true) })
+                                res.add(music)
                         }
                     res
                 }
