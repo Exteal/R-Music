@@ -9,6 +9,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -53,7 +54,7 @@ open class MusicAdapter(private val dataSet: List<Music>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.music_layout, viewGroup, false)
+            .inflate(R.layout.layout_music, viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -62,19 +63,20 @@ open class MusicAdapter(private val dataSet: List<Music>) :
 
 
 
-    private fun toDefaultColor() {
-        views.forEach { v -> v.setBackgroundColor(Color.WHITE) }
+    private fun itemsToDefaultColor() {
+        views.forEach { v -> v.setBackgroundColor(ContextCompat.getColor(v.context, R.color.black)) }
     }
     open fun onMusicClick(it : View, position: Int) {
         if(Player.playlist == dataSet && Player.storedMusicPos == position) {
             Player.storedMusicPos =-1
-            it.setBackgroundColor(Color.WHITE)
+            it.setBackgroundColor(ContextCompat.getColor(it.context, R.color.black))
+            //TODO set color to theme default
         }
 
         else {
             when(Player.storedMusicPos) {
                 -1 -> {}
-                else -> toDefaultColor()
+                else -> itemsToDefaultColor()
             }
 
             it.setBackgroundColor(Color.RED)

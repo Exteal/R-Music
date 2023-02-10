@@ -8,19 +8,26 @@
     tools:context=".MainActivity">
 
 
-   <androidx.appcompat.widget.SearchView
-       android:id="@+id/Search"
-       android:layout_height="wrap_content"
+
+   <androidx.appcompat.widget.Toolbar
+       android:id="@+id/toolbar"
        android:layout_width="match_parent"
+       android:layout_height="wrap_content"
        app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintLeft_toLeftOf="parent">
-   </androidx.appcompat.widget.SearchView>
+       android:elevation="20dp"
+       app:titleTextColor="@color/teal_700"
+       app:menu="@menu/toolbar_menu"
+       android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+
+
+       />
 
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/recyclerview"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       app:layout_constraintTop_toBottomOf="@id/Search"
+       app:layout_constraintTop_toBottomOf="@id/toolbar"
        app:layout_constraintBottom_toTopOf="@id/playerCard"
        app:layout_constraintLeft_toLeftOf="parent"
        app:layout_constraintRight_toRightOf="parent"

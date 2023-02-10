@@ -1,7 +1,7 @@
 package com.example.kotlinapp
 
-import android.graphics.Color
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,7 +18,8 @@ class MusicPlaylistAdapter(musicList: ArrayList<Music>) : MusicAdapter(musicList
     }
 
     override fun onMusicClick(it : View, position: Int) {
-        othersRecyclers.forEach { re -> re.children.forEach { ch -> ch.setBackgroundColor(Color.WHITE) } }
+        othersRecyclers.forEach { re -> re.children.forEach { ch ->
+            ch.setBackgroundColor(ContextCompat.getColor(it.context, R.color.black)) } }
         super.onMusicClick(it, position)
         //TODO color change -> define default color
     }
