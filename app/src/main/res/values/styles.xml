@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="iconPadding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:minWidth">48dp</item>
-        <item name="android:minHeight">48dp</item>
-    </style>
-
     <style name="PlayerButton" parent="Widget.Material3.Button.IconButton">
         <item name="android:maxWidth">48dp</item>
         <item name="android:maxHeight">48dp</item>
-        <item name="android:backgroundTint">@color/playerCard</item>
         <item name="iconSize">12dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="iconPadding">0dp</item>
         <item name="android:insetLeft">8dp</item>
     </style>
+
+    <style name="Base_ToolbarStyle">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:theme">@style/Base_ToolbarTheme</item>
+        <item name="titleTextAppearance">@style/CustomTitleTextAppearance</item>
+    </style>
+
+    <style name="Base_ToolbarTheme">
+        <!-- Color used for the title of the Toolbar - as long as not overridden -->
+        <item name="android:textColorPrimary">#d509ac</item>
+        <!-- Used to color back button and three dots -->
+        <item name="android:textColorSecondary">#acd509</item>
+    </style>
+
+    <style name="CustomTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">cursive</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">#d53209</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

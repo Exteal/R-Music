@@ -1,14 +1,11 @@
 package com.example.kotlinapp
 
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -19,21 +16,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .add(R.id.playerFragment, PlayerMP3Fragment())
+            .add(R.id.recyclerFragment, MusicFragment())
+            .commit()
+
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         val searchItem = menu?.findItem(R.id.toolbarSearch)
         val searchView = searchItem?.actionView as SearchView
-
         searchView.isSubmitButtonEnabled = true
+        searchView.queryHint = "Search here"
 
         val recycler : RecyclerView = findViewById(R.id.recyclerview)
-        val musicAdapter = recycler.adapter as MusicAdapter
+
+        val musicAdapter = recycler.adapter as? MusicAdapter
+        val playListAdapter = recycler.adapter as? PlayListAdapter
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(query: String?): Boolean {
-                musicAdapter.filter.filter(query)
-                return true
+                musicAdapter?.filter?.filter(query)
+                playListAdapter?.filter?.filter(query)
+                return false
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -59,30 +70,25 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        Player.handleComponents(activity = this, usesCardLayout = true)
-
-        val recycler : RecyclerView = findViewById(R.id.recyclerview)
-        val musicAdapter = MusicAdapter(musics)
-        recycler.adapter = musicAdapter
-
-        val musicSeparator = DividerItemDecoration(recycler.context, DividerItemDecoration.VERTICAL)
-        val drawable = ContextCompat.getDrawable(recycler.context, R.drawable.divider)
-        drawable?.let {
-            musicSeparator.setDrawable(it)
-            recycler.addItemDecoration(musicSeparator)
-        }
-
+        Player.handleComponents(activity = this, layoutType = PlayerMp3Layout::class.java)
 
         val nav : BottomNavigationView = findViewById(R.id.nav)
 
         nav.setOnItemSelectedListener {
             when(it.itemId) {
-                R.id.page1 -> true
-                R.id.page2 -> {
-                    val intent = Intent(this, PlaylistActivity::class.java)
-                    startActivity(intent)
+                R.id.page1 -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.recyclerFragment, MusicFragment())
+                        .commit()
                     true
                 }
+                R.id.page2 -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.recyclerFragment, PlayListFragment())
+                        .commit()
+                    true
+                }
+
                 R.id.page3 -> true
                 else -> true
             }

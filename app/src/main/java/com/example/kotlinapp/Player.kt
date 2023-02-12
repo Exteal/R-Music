@@ -16,64 +16,73 @@ import kotlin.properties.Delegates
 
 object Player {
 
-    private var playingMusicPos by Delegates.notNull<Int>()
+    var playingMusicPos by Delegates.notNull<Int>()
     var storedMusicPos  = -1
     var playlist : ArrayList<Music> = ArrayList()
 
     private var sliderThread : Timer? = null
-    private var player = MediaPlayer()
+    var player = MediaPlayer()
 
     //use every activity change
-    fun handleComponents(activity: AppCompatActivity, usesCardLayout : Boolean) {
-            handleButtons(activity, usesCardLayout)
-            handleSlider(activity, usesCardLayout)
+    fun<L : PlayerLayout> handleComponents(activity: AppCompatActivity, layoutType: Class<L>) {
+            handleButtons(activity, layoutType)
+            handleSlider(activity)
     }
 
-    private fun handleButtons(activity: AppCompatActivity, usesCardLayout: Boolean) {
+    fun isValidPosition(position: Int) = position in (playlist.indices)
+    private fun <L: PlayerLayout> handleButtons(activity: AppCompatActivity, layoutType: Class<L>) {
 
         val pause : MaterialButton = activity.findViewById(R.id.pause)
-        val skip : MaterialButton = activity.findViewById(R.id.skip)
+        val skipNext : MaterialButton = activity.findViewById(R.id.next)
         val stop : MaterialButton = activity.findViewById(R.id.stop)
-        val fab : FloatingActionButton = activity.findViewById(R.id.playFAB)
+        val play : FloatingActionButton = activity.findViewById(R.id.play)
 
-        if(usesCardLayout) PlayerLayout.updateFabLayout(activity)
+        val layoutUpdater = layoutType.getConstructor(AppCompatActivity::class.java).newInstance(activity)
+        layoutUpdater.updateFabLayout()
 
-        skip.setOnClickListener {
+        skipNext.setOnClickListener {
             if(playingMusicPos+1 in playlist.indices) {
                 playingMusicPos++
                 storedMusicPos =  playingMusicPos
-                fab.performClick()
+                play.performClick()
             }
             else {
-                stop.performClick()
+                playingMusicPos = 0
+                storedMusicPos =  playingMusicPos
+                play.performClick()
             }
         }
 
         pause.setOnClickListener {
-            pause()
+            pause(activity)
+
         }
 
         stop.setOnClickListener {
             stop()
-            if(usesCardLayout) PlayerLayout.onStopLayout(activity)
+            layoutUpdater.onStopLayout()
         }
 
-        fab.setOnClickListener {
+        play.setOnClickListener {
             when(storedMusicPos) {
                 -1 -> {
                     stop()
-                    if(usesCardLayout) PlayerLayout.onStopLayout(activity)
+                    layoutUpdater.onStopLayout()
                 }
                 else -> {
                     playMusic(activity)
-                    if(usesCardLayout) PlayerLayout.onPlayLayout(activity)
+                    layoutUpdater.onPlayLayout()
                 }
             }
         }
 
     }
 
-    private fun handleSlider(activity: AppCompatActivity, cardPlayerLayout: Boolean) {
+    fun changeLoopState() {
+        player.isLooping = !player.isLooping
+    }
+
+    private fun handleSlider(activity: AppCompatActivity) {
         val slider : Slider = activity.findViewById(R.id.playerSlider)
         slider.setLabelFormatter { value ->
             val minFormat  = DecimalFormat("#")
@@ -99,9 +108,23 @@ object Player {
         player.release()
     }
 
-    private fun pause() {
-        if(player.isPlaying) player.pause()
-        else player.start()
+    private fun pause(activity: AppCompatActivity) {
+        if(player.isPlaying)  {
+            sliderThread?.cancel()
+            player.pause()
+        }
+        else {
+            player.start()
+            val slider : Slider = activity.findViewById(R.id.playerSlider)
+
+            sliderThread = newSliderThread(slider)
+        }
+    }
+
+    private fun newSliderThread(slider: Slider) : Timer =  fixedRateTimer(initialDelay = 1000, period = 1000) {
+        if (slider.value + 1000 < slider.valueTo) slider.value += 1000.toFloat()
+        else if(player.isLooping) {slider.value = 0f}
+        else this.cancel()
     }
 
     private fun playMusic(activity: AppCompatActivity) {
@@ -121,26 +144,18 @@ object Player {
             sliderThread = null
         }
 
-        // val uir = "/storage/emulated/0/Android/media/Burn My Dread.mp3"
-        // val ff = File(uir)
-        // Log.d("UIR", ff.canRead().toString())
-        // player = MediaPlayer.create(activity, ff.toUri())
 
         player.setOnPreparedListener {
             slider.valueTo = player.duration.toFloat()
             sliderThread?.cancel()
+            player.start()
             slider.value = 0f
 
-            player.start()
+            sliderThread = newSliderThread(slider)
 
-            sliderThread = fixedRateTimer(initialDelay = 1000, period = 1000) {
-                if(slider.value+1000 < slider.valueTo) slider.value+=1000.toFloat()
-                else this.cancel()
-            }
         }
     }
-
-    //card layout management
-
-
 }
+
+
+

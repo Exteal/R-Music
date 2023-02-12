@@ -22,10 +22,7 @@ open class MusicAdapter(private val dataSet: List<Music>) :
     init  {
         filterResults = ArrayList(dataSet)
     }
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder)
-     */
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val musicImage: ImageView
@@ -35,7 +32,6 @@ open class MusicAdapter(private val dataSet: List<Music>) :
 
         init {
             // Define click listener for the ViewHolder's View
-
             musicName = view.findViewById(R.id.musicName)
             musicArtist = view.findViewById(R.id.musicArtist)
             musicImage= view.findViewById(R.id.musicImage)
@@ -50,27 +46,27 @@ open class MusicAdapter(private val dataSet: List<Music>) :
 
     }
 
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.layout_music, viewGroup, false)
 
         return ViewHolder(view)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
 
 
 
     private fun itemsToDefaultColor() {
-        views.forEach { v -> v.setBackgroundColor(ContextCompat.getColor(v.context, R.color.black)) }
+        views.forEach { v ->
+            v.setBackgroundColor(ContextCompat.getColor(v.context, R.color.background))
+        }
     }
+
     open fun onMusicClick(it : View, position: Int) {
         if(Player.playlist == dataSet && Player.storedMusicPos == position) {
             Player.storedMusicPos =-1
-            it.setBackgroundColor(ContextCompat.getColor(it.context, R.color.black))
-            //TODO set color to theme default
+
+            it.setBackgroundColor(ContextCompat.getColor(it.context, R.color.background))
         }
 
         else {
@@ -80,15 +76,23 @@ open class MusicAdapter(private val dataSet: List<Music>) :
             }
 
             it.setBackgroundColor(Color.RED)
-            Player.playlist = ArrayList(dataSet)
+            Player.playlist = filterResults
             Player.storedMusicPos = position
         }
 
 
     }
+    open fun onLongMusicClick(it: View, position: Int) {
+        val music = filterResults[position]
+        val intent = Intent(it.context, MusicActivity::class.java)
+        val playlist =  PlayList("Home", ArrayList(dataSet))
+        intent.putExtra("playlist", playlist)
+        intent.putExtra("music", music)
+        Player.playlist = filterResults
+        Player.storedMusicPos = filterResults.indexOf(music)
+        it.context.startActivity(intent)
+    }
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
 
         val music = filterResults[position]
         viewHolder.bind(music)
@@ -99,17 +103,14 @@ open class MusicAdapter(private val dataSet: List<Music>) :
         }
 
        viewHolder.itemView.setOnLongClickListener {
-            val intent = Intent(it.context, MusicActivity::class.java)
-            intent.putExtra("playlist", arrayListOf(dataSet))
-            intent.putExtra("music", music)
-            it.context.startActivity(intent)
-            true
-
+           onLongMusicClick(it, position)
+           true
        }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+
     override fun getItemCount() = filterResults.size
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(condition: CharSequence?): FilterResults {

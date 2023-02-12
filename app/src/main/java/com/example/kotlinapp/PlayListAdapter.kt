@@ -3,15 +3,19 @@ package com.example.kotlinapp
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 
 class PlayListAdapter(private val playlists: List<PlayList>) :
-    RecyclerView.Adapter<PlayListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<PlayListAdapter.ViewHolder>(), Filterable {
 
     private val recyclers = ArrayList<RecyclerView>()
+    private var filterResults = ArrayList<PlayList>(playlists)
+
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -55,7 +59,7 @@ class PlayListAdapter(private val playlists: List<PlayList>) :
     }
 
     override fun onBindViewHolder(viewholder: ViewHolder, position: Int) {
-        val playlist = playlists[position]
+        val playlist = filterResults[position]
 
         viewholder.bind(playlist, recyclers)
 
@@ -71,5 +75,31 @@ class PlayListAdapter(private val playlists: List<PlayList>) :
     }
 
 
-    override fun getItemCount(): Int = playlists.size
+    override fun getItemCount(): Int = filterResults.size
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(condition: CharSequence?): FilterResults {
+                filterResults = if(condition.isNullOrBlank()) {
+                       ArrayList(playlists)
+                    } else {
+                        val res = ArrayList<PlayList>()
+                        for (playlist in playlists) {
+                            if (playlist.name.contains(condition)) res.add(playlist)
+                        }
+                        res
+                   }
+
+                val results = FilterResults()
+                results.values = filterResults
+                return results
+
+            }
+
+            override fun publishResults(p0: CharSequence?, results: FilterResults?) {
+               filterResults = results?.values as ArrayList<PlayList>
+               notifyDataSetChanged()
+            }
+
+        }
+    }
 }

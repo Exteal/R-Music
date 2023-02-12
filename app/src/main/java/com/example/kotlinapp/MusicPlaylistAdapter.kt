@@ -1,9 +1,12 @@
 package com.example.kotlinapp
 
+import android.content.Intent
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textview.MaterialTextView
 
 class MusicPlaylistAdapter(musicList: ArrayList<Music>) : MusicAdapter(musicList) {
     private val othersRecyclers = ArrayList<RecyclerView>()
@@ -19,8 +22,26 @@ class MusicPlaylistAdapter(musicList: ArrayList<Music>) : MusicAdapter(musicList
 
     override fun onMusicClick(it : View, position: Int) {
         othersRecyclers.forEach { re -> re.children.forEach { ch ->
-            ch.setBackgroundColor(ContextCompat.getColor(it.context, R.color.black)) } }
+            ch.setBackgroundColor(ContextCompat.getColor(it.context, R.color.background)) }
+        }
         super.onMusicClick(it, position)
-        //TODO color change -> define default color
     }
+
+    override fun onLongMusicClick(it : View, position: Int) {
+        val intent = Intent(it.context, MusicActivity::class.java)
+
+        Player.storedMusicPos = position
+        Player.playlist = filterResults
+
+
+        val playlistView  = (it.parent.parent as ViewGroup).children
+        val playlistName = playlistView.elementAt(0) as MaterialTextView
+
+        val playlist =  PlayList(playlistName.text.toString(), filterResults)
+
+        intent.putExtra("playlist", playlist)
+        intent.putExtra("music", filterResults[position])
+        it.context.startActivity(intent)
+    }
+
 }

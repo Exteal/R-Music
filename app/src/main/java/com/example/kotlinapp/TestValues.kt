@@ -1,5 +1,26 @@
 package com.example.kotlinapp
 
+
+fun Music.getImage () : Int =
+    when(this.ref) {
+        1 -> R.mipmap.moeshop
+        2-> R.mipmap.cafe1
+        3-> R.mipmap.cafe3
+        4 -> R.mipmap.skillet
+        5 -> R.mipmap.garden
+        else -> {throw java.lang.IllegalArgumentException()}
+    }
+
+fun Music.getSound() : Int =
+    when(this.ref) {
+        1 -> R.raw.superstar
+        2 -> R.raw.cafe1
+        3 -> R.raw.cafe3
+        4 -> R.raw.hero
+        5 -> R.raw.garden
+        else -> {throw java.lang.IllegalArgumentException()}
+    }
+
 val moe = Music("Moe shop", "Superstar", 1, listOf(Tag.WEEB, Tag.POP))
 val psy = Music("Bizen", "If the sky clears", 2, listOf(Tag.JAZZ, Tag.FUNK))
 val rush = Music("Koutak", "Rainbow after rain", 3, listOf(Tag.JAZZ, Tag.HOUSE))
