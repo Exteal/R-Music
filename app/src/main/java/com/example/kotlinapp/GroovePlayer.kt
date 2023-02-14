@@ -19,7 +19,7 @@ object GroovePlayer {
                 play.performClick()
             }
             else {
-                Player.playingMusicPos = Player.playlist.size
+                Player.playingMusicPos = Player.playlist.lastIndex
                 Player.storedMusicPos = Player.playingMusicPos
                 play.performClick()
             }

@@ -105,7 +105,7 @@ object Player {
     }
 
     private fun stop() {
-        player.release()
+        player.reset()
     }
 
     private fun pause(activity: AppCompatActivity) {

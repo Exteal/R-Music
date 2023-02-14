@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-
+    <color name="toolBar">#F2E6FC</color>
     <color name="text">#c9930b</color>
     <color name="playerBackground">#D7E2E4</color>
     <color name="background">#FFFBFE</color>

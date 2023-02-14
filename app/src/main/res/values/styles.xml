@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
     <style name="PlayerButton" parent="Widget.Material3.Button.IconButton">
         <item name="android:maxWidth">48dp</item>
         <item name="android:maxHeight">48dp</item>
@@ -11,14 +13,15 @@
 
     <style name="Base_ToolbarStyle">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="android:background">?colorPrimary</item>
+        <item name="android:background">@color/toolBar</item>
         <item name="android:theme">@style/Base_ToolbarTheme</item>
+        <item name="fontFamily">@font/rock_salt</item>
         <item name="titleTextAppearance">@style/CustomTitleTextAppearance</item>
     </style>
 
     <style name="Base_ToolbarTheme">
         <!-- Color used for the title of the Toolbar - as long as not overridden -->
-        <item name="android:textColorPrimary">#d509ac</item>
+        <item name="android:textColorPrimary"></item>
         <!-- Used to color back button and three dots -->
         <item name="android:textColorSecondary">#acd509</item>
     </style>
@@ -28,6 +31,9 @@
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">#d53209</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="bottomBarStyle" parent="Widget.Material3.BottomNavigationView">
     </style>
 
 </resources>

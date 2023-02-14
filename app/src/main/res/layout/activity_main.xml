@@ -45,6 +45,8 @@
        android:layout_height="wrap_content"
        app:layout_constraintBottom_toTopOf="@id/nav"
        app:layout_constraintRight_toRightOf="parent"
+       android:layout_marginRight="12dp"
+       android:layout_marginBottom="12dp"
        android:elevation="4dp"
        layout="@layout/play_fab"
        />
@@ -57,6 +59,7 @@
        app:layout_constraintBottom_toBottomOf="parent"
        app:menu="@menu/nav_bar_menu"
        android:elevation="4dp"
+       style="@style/bottomBarStyle"
        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

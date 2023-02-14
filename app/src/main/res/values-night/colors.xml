@@ -2,4 +2,5 @@
 <resources>
     <color name="background">#1C1B1F</color>
     <color name="text">#c9930b</color>
+    <color name="toolBar">#292331</color>
 </resources>

@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import kotlin.properties.Delegates
 
 class MusicActivity : AppCompatActivity() {
@@ -46,9 +47,9 @@ class MusicActivity : AppCompatActivity() {
         val playingSong : TextView = findViewById(R.id.playerDescription)
         playingSong.text = "${music.artist} - ${music.name}"
 
-        val nextButton : Button = findViewById(R.id.activityMusicNextSong)
-        val previousButton : Button = findViewById(R.id.activityMusicPreviousSong)
-        val returnButton : Button = findViewById(R.id.musicActivityBack)
+        val nextButton : MaterialButton = findViewById(R.id.activityMusicNextSong)
+        val previousButton : MaterialButton = findViewById(R.id.activityMusicPreviousSong)
+        val returnButton : MaterialButton = findViewById(R.id.musicActivityBack)
 
 
         previousButton.setOnClickListener {
@@ -86,6 +87,7 @@ class MusicActivity : AppCompatActivity() {
             num--
             music = playlist[num]
             layoutMusic(music)
+            Player.storedMusicPos = num
         }
     }
 
@@ -94,6 +96,7 @@ class MusicActivity : AppCompatActivity() {
             num++
             music = playlist[num]
             layoutMusic(music)
+            Player.storedMusicPos = num
         }
     }
 }
