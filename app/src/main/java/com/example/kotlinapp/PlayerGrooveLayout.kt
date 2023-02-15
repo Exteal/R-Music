@@ -2,8 +2,8 @@ package com.example.kotlinapp
 
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 
 class PlayerGrooveLayout(activity: AppCompatActivity) : PlayerLayout(activity) {
 
@@ -12,17 +12,22 @@ class PlayerGrooveLayout(activity: AppCompatActivity) : PlayerLayout(activity) {
     }
 
     override fun onPlayLayout() {
+        val btn : MaterialButton = activity.findViewById(R.id.pause)
+        btn.icon = ContextCompat.getDrawable(activity, R.mipmap.baseline_pause_circle_outline_white_48)
+
         val music = Player.playlist[Player.storedMusicPos]
         val description : TextView = activity.findViewById(R.id.playerDescription)
         description.text = "${music.artist} - ${music.name}"
     }
-    override fun updateFabLayout() {
-        val play : FloatingActionButton = activity.findViewById(R.id.play)
-        play.setImageDrawable(AppCompatResources.getDrawable(activity.applicationContext, R.mipmap.play))
-    }
 
-    fun loopLayout() {
+    override fun fromPauseLayout() {
+        val btn : MaterialButton = activity.findViewById(R.id.pause)
+        btn.icon = ContextCompat.getDrawable(activity, R.mipmap.baseline_pause_circle_outline_white_48)
 
     }
 
+    override fun toPauseLayout() {
+        val btn : MaterialButton = activity.findViewById(R.id.pause)
+        btn.icon = ContextCompat.getDrawable(activity, R.mipmap.baseline_play_circle_outline_white_48)
+    }
 }

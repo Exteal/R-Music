@@ -3,10 +3,10 @@ package com.example.kotlinapp
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
  class PlayerMp3Layout(activity: AppCompatActivity) : PlayerLayout(activity) {
     override fun onStopLayout() {
@@ -18,13 +18,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
         val music = Player.playlist[Player.storedMusicPos]
         val description : TextView = activity.findViewById(R.id.playerDescription)
         val playerCard : CardView = activity.findViewById(R.id.playerCard)
+        val btn : MaterialButton = activity.findViewById(R.id.pause)
 
+        btn.icon = ContextCompat.getDrawable(activity, R.mipmap.pause)
         description.text = music.name
         playerCard.visibility = View.VISIBLE
     }
-    override fun updateFabLayout() {
-        val play : FloatingActionButton = activity.findViewById(R.id.play)
-        play.setImageDrawable(AppCompatResources.getDrawable(activity.applicationContext, R.mipmap.play))
-    }
-}
+
+
+
+     override fun fromPauseLayout() {
+         val btn : MaterialButton = activity.findViewById(R.id.pause)
+         btn.icon = ContextCompat.getDrawable(activity, R.mipmap.pause)
+     }
+
+     override fun toPauseLayout() {
+         val btn : MaterialButton = activity.findViewById(R.id.pause)
+         btn.icon = ContextCompat.getDrawable(activity, R.mipmap.baseline_play_arrow_black_48)
+     }
+ }
 

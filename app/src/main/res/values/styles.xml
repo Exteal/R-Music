@@ -21,9 +21,9 @@
 
     <style name="Base_ToolbarTheme">
         <!-- Color used for the title of the Toolbar - as long as not overridden -->
-        <item name="android:textColorPrimary"></item>
+        <item name="android:textColorPrimary">#500070</item>
         <!-- Used to color back button and three dots -->
-        <item name="android:textColorSecondary">#acd509</item>
+        <item name="android:textColorSecondary">#500070</item>
     </style>
 
     <style name="CustomTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

@@ -38,22 +38,26 @@ object Player {
         val play : FloatingActionButton = activity.findViewById(R.id.play)
 
         val layoutUpdater = layoutType.getConstructor(AppCompatActivity::class.java).newInstance(activity)
-        layoutUpdater.updateFabLayout()
+        layoutUpdater.setFabIcon()
 
         skipNext.setOnClickListener {
             if(playingMusicPos+1 in playlist.indices) {
                 playingMusicPos++
                 storedMusicPos =  playingMusicPos
-                play.performClick()
+
             }
             else {
                 playingMusicPos = 0
                 storedMusicPos =  playingMusicPos
-                play.performClick()
             }
+            play.performClick()
         }
 
         pause.setOnClickListener {
+            if (player.isPlaying)
+                layoutUpdater.toPauseLayout()
+            else
+                layoutUpdater.fromPauseLayout()
             pause(activity)
 
         }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base_ToolbarTheme">
+        <!-- Color used for the title of the Toolbar - as long as not overridden -->
+        <item name="android:textColorPrimary">#700050</item>
+        <!-- Used to color back button and three dots -->
+        <item name="android:textColorSecondary">#700050</item>
+    </style>
+</resources>
