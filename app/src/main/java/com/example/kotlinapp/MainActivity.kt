@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
             .setReorderingAllowed(true)
             .add(R.id.playerFragment, PlayerMP3Fragment())
-            .add(R.id.recyclerFragment, MusicFragment())
+            .add(R.id.contentFragment, MusicFragment())
             .commit()
 
         }
@@ -34,28 +34,34 @@ class MainActivity : AppCompatActivity() {
         searchView.isSubmitButtonEnabled = true
         searchView.queryHint = "Search here"
 
-        val recycler : RecyclerView = findViewById(R.id.recyclerview)
+        val recycler : RecyclerView? = this.findViewById(R.id.recyclerview)
 
-        val musicAdapter = recycler.adapter as? MusicAdapter
-        val playListAdapter = recycler.adapter as? PlayListAdapter
+        if (recycler == null) {
+            return super.onCreateOptionsMenu(menu)
+        }
+        else {
+            val musicAdapter = recycler.adapter as? MusicAdapter
+            val playListAdapter = recycler.adapter as? PlayListAdapter
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(query: String?): Boolean {
-                musicAdapter?.filter?.filter(query)
-                playListAdapter?.filter?.filter(query)
-                return false
-            }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextChange(query: String?): Boolean {
+                    musicAdapter?.filter?.filter(query)
+                    playListAdapter?.filter?.filter(query)
+                    return false
+                }
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-        })
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+            })
+        }
+
 
         return super.onCreateOptionsMenu(menu)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
         R.id.toolbarFav -> {
-            true
+            false
         }
         R.id.toolbarSearch -> {
             false
@@ -77,18 +83,23 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId) {
                 R.id.page1 -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.recyclerFragment, MusicFragment())
+                        .replace(R.id.contentFragment, MusicFragment())
                         .commit()
                     true
                 }
                 R.id.page2 -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.recyclerFragment, PlayListFragment())
+                        .replace(R.id.contentFragment, PlayListFragment())
                         .commit()
                     true
                 }
 
-                R.id.page3 -> true
+                R.id.page3 -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.contentFragment, RadioFragment())
+                        .commit()
+                    true
+                }
                 else -> true
             }
         }

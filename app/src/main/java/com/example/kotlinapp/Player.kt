@@ -16,21 +16,57 @@ import kotlin.properties.Delegates
 
 object Player {
 
-    var playingMusicPos by Delegates.notNull<Int>()
+    private var playingMusicPos by Delegates.notNull<Int>()
     var storedMusicPos  = -1
     var playlist : ArrayList<Music> = ArrayList()
 
     private var sliderThread : Timer? = null
-    var player = MediaPlayer()
+    private var player = MediaPlayer()
+
+
+    //debugging tool
+    fun getPlayer() = player
 
     //use every activity change
+
     fun<L : PlayerLayout> handleComponents(activity: AppCompatActivity, layoutType: Class<L>) {
             handleButtons(activity, layoutType)
             handleSlider(activity)
     }
 
-    fun isValidPosition(position: Int) = position in (playlist.indices)
-    private fun <L: PlayerLayout> handleButtons(activity: AppCompatActivity, layoutType: Class<L>) {
+    private fun <L : PlayerLayout> handleButtons(activity: AppCompatActivity, layoutType: Class<L>) {
+        handleCommonsButtons(activity, layoutType)
+
+        when (layoutType){
+            PlayerGrooveLayout::class.java -> handleGrooveButtons(activity)
+        }
+    }
+    private fun handleGrooveButtons(activity: AppCompatActivity) {
+
+        val skipPrevious: MaterialButton = activity.findViewById(R.id.previous)
+        val loop : MaterialButton = activity.findViewById(R.id.loop)
+        val play : FloatingActionButton = activity.findViewById(R.id.play)
+
+        skipPrevious.setOnClickListener {
+            if(isValidPosition(playingMusicPos-1)) {
+                playingMusicPos--
+                storedMusicPos = playingMusicPos
+                play.performClick()
+            }
+            else {
+                playingMusicPos = playlist.lastIndex
+                storedMusicPos = playingMusicPos
+                play.performClick()
+            }
+        }
+
+        loop.setOnClickListener {
+            changeLoopState()
+        }
+    }
+
+    private fun isValidPosition(position: Int) = position in (playlist.indices)
+    private fun <L: PlayerLayout> handleCommonsButtons(activity: AppCompatActivity, layoutType: Class<L>) {
 
         val pause : MaterialButton = activity.findViewById(R.id.pause)
         val skipNext : MaterialButton = activity.findViewById(R.id.next)
@@ -82,7 +118,7 @@ object Player {
 
     }
 
-    fun changeLoopState() {
+    private fun changeLoopState() {
         player.isLooping = !player.isLooping
     }
 
@@ -137,6 +173,7 @@ object Player {
 
         val slider : Slider = activity.findViewById(R.id.playerSlider)
         val music = playlist[storedMusicPos]
+
 
 
 

@@ -18,8 +18,15 @@
        style="@style/Base_ToolbarStyle"
        />
 
+   <!--<androidx.fragment.app.FragmentContainerView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       app:layout_constraintTop_toBottomOf="@id/toolbar"
+       app:layout_constraintRight_toRightOf="parent"
+       />-->
+
    <androidx.fragment.app.FragmentContainerView
-       android:id="@+id/recyclerFragment"
+       android:id="@+id/contentFragment"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        app:layout_constraintTop_toBottomOf="@id/toolbar"
